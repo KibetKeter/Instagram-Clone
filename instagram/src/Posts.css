@@ -1,0 +1,32 @@
+.post__header
+{
+    display: flex;
+    align-items: center;
+    padding:20px;
+}
+.avatar__style
+{
+   margin-right: 10px;
+}
+.post__image
+{
+    width: 100%;
+    /* Really crucial when dealing with images */
+    object-fit: contain;
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+}
+.post__text
+{
+        font-weight: normal;
+        padding:20px;
+}
+
+.post__container
+{
+    background-color: white;
+    max-width: 500px;
+    border:1px solid lightgray;
+    margin-bottom: 45px;
+
+}
