@@ -4,3 +4,29 @@
 .App{
   background-color: #fafafa;
 }
+.Bottom__text
+{
+  text-align: "center";
+  color:grey;
+}
+.text__colour
+{
+  text-align: center;
+  color:grey;
+}
+/* .app__signup
+{
+  display: flex;
+  flex-direction: row;
+} */
+.app__header__image__google
+{
+   max-width: 20% !important;
+   max-height: 20% !important; 
+}
+.app__header__image__apple
+{
+  max-width: 30% !important;
+  min-height: 40px !important; 
+  margin-bottom: 1vh;
+}
