@@ -1,13 +1,16 @@
 import React ,{useState , useEffect} from 'react';
 import './App.css';
 import Header from './header.js'
+import "./header.css"
 import Posts from './Posts.js';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import  { db, auth} from './firebase';
-import { Button, TextField } from '@material-ui/core';
+import { Avatar, Button, TextField } from '@material-ui/core';
+import ImageUpload from './ImageUpload.js';
+import InstagramEmbed from "react-instagram-embed";
 
 // Transition modal
 const useStyles = makeStyles((theme) => ({
@@ -68,7 +71,7 @@ function App() {
             }, [user,username]);
 
   useEffect(() =>{
-                  db.collection('posts').onSnapshot(snapshot => 
+                  db.collection('posts').orderBy('timestamp','desc').onSnapshot(snapshot => 
                                                                 {
                                                                   setPosts(snapshot.docs.map(doc => (
                                                                                                       {
@@ -109,7 +112,7 @@ const signIn = (event) =>
   return (
     <div className="App">
       {/* REGISTER MODAL */}
-              <Modal
+                 <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
                 className={classes.modal}
@@ -156,7 +159,7 @@ const signIn = (event) =>
                   {/* Password Field */}
                   <TextField
                     id="filled-password-input"
-                    label="Password"
+                    placeholder="Password"
                     type="password"
                     autoComplete="current-password"
                     variant="filled"
@@ -229,15 +232,15 @@ const signIn = (event) =>
             
           {/* Password Field */}
           <TextField
-            id="filled-password-input"
-            label="Password"
+            id="filled"
+            placeholder ="Password"
             type="password"
             autoComplete="current-password"
             variant="filled"
             value = {password}
             onChange = {(event) => setPassword(event.target.value)}
            /><br/><br/>
-            <Button onClick = {signIn} type ="submit" variant="contained" color="primary" disabled = {!password}>
+            <Button  onClick = {signIn} type ="submit" variant="contained" color="primary" disabled = {!password}>
               Sign In
             </Button><br/><br/>
             <small><p className = "Bottom__text">By signing up, you agree to our <strong>Terms,<br/> Data Policy</strong> and <strong>Cookies Policy.</strong></p></small>
@@ -259,32 +262,72 @@ const signIn = (event) =>
       </Modal>
 
      {/* Header */}
-     < Header />
-     {
-              // Conditional Statement
-             user ? 
-              (
-                // If you have alredy signed in
-                <Button onClick = {()=>auth.signOut()}>Log Out</Button>
-              )
-           :
-              (
-                <div className = "app__loginContainer">
-                    <Button onClick={ () => setOpenSignIn(true) }>Sign In</Button>
-                    <Button onClick={ () => setOpen(true) }>Register</Button>
+     {/* < Header /> */}
+
+     <div className = "header">
+                <div className ="app__header">
+                    <img
+                        className = "app__header__image"
+                        src = "https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
+                        alt = "Instagram logo">            
+                    </img>
+                      {
+                          // Conditional Statement
+                
+                        user ? 
+                          (
+                            // If you have alredy signed in
+                            <Button onClick = {()=>auth.signOut()}>Log Out</Button>
+                          )
+                      :
+                          (
+                            <div className = "app__loginContainer">
+                                <Button onClick={ () => setOpenSignIn(true) }>Sign In</Button>
+                                <Button onClick={ () => setOpen(true) }>Register</Button>
+                          </div>
+                            // If you still haven't signed in
+                            // <Button onClick={() => setOpen(true)}>Register</Button>
+                          )
+                      
+                      }
               </div>
-                // If you still haven't signed in
-                // <Button onClick={() => setOpen(true)}>Register</Button>
-              )
-            }
-            <p>Welcome {username} </p>
+      </div>
      {/* Posts */}
      {/* Looping through the posts components*/}
-      {
-        posts.map(({id,post})=> (
-          <Posts key = {id} username={post.username} caption={post.caption} imageUrl={post.imageUrl}/>
-        ))
-      }
+ <div className = "app__posts">
+        {/* Posts from the uploads  */}
+      <div className = "app__posts__left">
+        {
+            posts.map(({id,post})=> (
+              <Posts key = {id}  postId={id} username={post.username} caption={post.caption} imageUrl={post.imageUrl}/>
+            ))
+        }
+        </div>
+        {/* My Instagram post */}
+        <div className = "app__posts__right">    
+          <h4><i>The developers Instagram Account</i><strong>⬇⬇</strong><i>Follow me on Instagram</i>😁😁</h4><br/>
+            <InstagramEmbed
+                  url='https://www.instagram.com/p/Bzvxf1KBvrS/?utm_source=ig_web_copy_link'
+                  maxWidth={320}
+                  hideCaption={false}
+                  containerTagName='div'
+                  protocol=''
+                  injectScript
+                  onLoading={() => {}}
+                  onSuccess={() => {}}
+                  onAfterRender={() => {}}
+                  onFailure={() => {}}
+            />
+        </div>
+    </div>
+  
+        {/* If statement to chekc whether user has logged in  */}
+
+        {user ?. displayName ?
+            (
+              <ImageUpload username = {user.displayName} />
+            ):
+              (<h3>Sorry You Need to Login to upload</h3>)}
     </div>
   );
 }

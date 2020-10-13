@@ -30,3 +30,17 @@
   min-height: 40px !important; 
   margin-bottom: 1vh;
 }
+.button__block
+{
+  widows: 50px !important; 
+}
+.app__posts
+{
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+.app__posts__right
+{
+  margin-left: 20px;
+}
