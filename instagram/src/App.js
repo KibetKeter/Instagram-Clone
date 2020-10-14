@@ -299,7 +299,7 @@ const signIn = (event) =>
       <div className = "app__posts__left">
         {
             posts.map(({id,post})=> (
-              <Posts key = {id}  postId={id} username={post.username} caption={post.caption} imageUrl={post.imageUrl}/>
+              <Posts key = {id}  postId={id} user={user} username={post.username} caption={post.caption} imageUrl={post.imageUrl}/>
             ))
         }
         </div>
@@ -321,13 +321,20 @@ const signIn = (event) =>
         </div>
     </div>
   
-        {/* If statement to chekc whether user has logged in  */}
+        {/* If statement to chec whether user has logged in  */}
+        <div className = "center__content">
+            {user ?. displayName ?
+                (
+                  <ImageUpload  username = {user.displayName} />
+                ):
+                  (<h3>Sorry You Need to Login to upload</h3>)}
+        </div>
 
-        {user ?. displayName ?
+        {/* {user ?. displayName ?
             (
-              <ImageUpload username = {user.displayName} />
+              <ImageUpload className = "center__content" username = {user.displayName} />
             ):
-              (<h3>Sorry You Need to Login to upload</h3>)}
+              (<h3 className = "center__content">Sorry You Need to Login to upload</h3>)} */}
     </div>
   );
 }

@@ -1,15 +1,26 @@
 .image__upload
 {
+    position: relative;
     display: flex;
     flex-direction: column;
-    width: 60%;
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
     margin-top: 10px;
     margin-bottom: 10px;
     background-color: white;
+    max-height: min-content !important;
 }
 .imageupload__progress
 {
-    width: 100%;
+    width: 100%;   
+}
+.upload
+{
+  display: flex;
+  position: center;
+}
+.button_right
+{
+    margin-right: 10px !important;
 }

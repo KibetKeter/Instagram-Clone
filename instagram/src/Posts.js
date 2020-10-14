@@ -4,7 +4,7 @@ import Avatar from '@material-ui/core/Avatar';
 import { db } from './firebase';
 import firebase from 'firebase';
 
-function Posts({postId, username, caption ,imageUrl})
+function Posts({postId ,user, username, caption ,imageUrl})
  {
     const [comments,setComments] = useState([]);
     const [comment,setComment] = useState('');
@@ -17,7 +17,8 @@ function Posts({postId, username, caption ,imageUrl})
                                     unsubscribe= db
                                                 .collection('posts')
                                                 .doc(postId)
-                                                .collection("commments")
+                                                .collection("comments")
+                                                .orderBy('timestamp','desc')
                                                 .onSnapshot((snapshot) => 
                                                                             {
                                                                                 setComments(snapshot.docs.map((doc) => doc.data()));
@@ -32,7 +33,16 @@ function Posts({postId, username, caption ,imageUrl})
 
         const postComment = (event) =>
         {
+                event.preventDefault();
 
+                db.collection("posts").doc(postId).collection("comments").add(
+                                                                                {
+                                                                                text:comment,
+                                                                                username:user.displayName,
+                                                                                timestamp:firebase.firestore.FieldValue.serverTimestamp()
+                                                                                }
+                                                                            );
+                                                                            setComment('');
         };
     return (
 
@@ -55,34 +65,37 @@ function Posts({postId, username, caption ,imageUrl})
 
             {/* Already Posted Comments */}
              <div className="post__comments">
-             <small><p><b>Comment Section</b></p></small>
             <small>
                 {comments.map((comment) =>
                 (
                     <p>
-                        <strong>{comment.username}</strong>
-                        :{comment.text}
+                        <strong>{comment.username}</strong>&nbsp;
+                         says&nbsp;{comment.text}<br/>
                     </p>
                 ))}
             </small>
              </div>   
+             { user && 
+             (
+                 <form className = "post__commentBox">
+                 <input 
+                     className = "post__input"
+                     type ="text"
+                     placeholder="Add a Comment..."
+                     value = {comment}
+                     onChange = {(event) => setComment(event.target.value)} />
 
-            <form className = "post__commentBox">
-                <input 
-                    className = "post__input"
-                    type ="text"
-                    placeholder="Add a Comment..."
-                    value = {comment}
-                    onChange = {(event) => setComment(event.target.value)} />
-            <button
-            className = "post__button"
-            disabled={!comment}
-            type="submit"
-            onClick ={postComment}>
-            Post
-            </button>
+                <button
+                    className = "post__button"
+                    disabled={!comment}
+                    type="submit"
+                    onClick ={postComment}>
+                    Post
+                </button>
+             </form>
+             )}
 
-            </form>
+            
         </div>
     )
 }

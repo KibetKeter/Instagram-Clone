@@ -1,4 +1,5 @@
-import { Button } from '@material-ui/core'
+import { Button, Icon, IconButton, Input, makeStyles, TextField } from '@material-ui/core'
+import BackupOutlinedIcon from '@material-ui/icons/BackupOutlined';
 import React, {useState} from 'react'
 import  { db, auth,storage} from './firebase';
 import firebase from 'firebase';
@@ -61,20 +62,34 @@ function ImageUpload({username}) {
                                                                             // Resetting progress bar after complete upload
                                                                                 setProgress(0);
                                                                                 setCaption("");
-                                                                                setImage(null);
+                                                                                setImage("");
                                                                             }
                                                                     )
                                                             }
                                                 )
                                             };
+// Icon Pack
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        '& > span': {
+        margin: theme.spacing(2),
+        },
+    },
+    }));
     
+const classes = useStyles();
     return (
         <div className = "image__upload">
             {/* I want to have a Caption input , File picker, Post Button */}
-            <progress className = "imageupload__progress" value ={progress} max = "100"/>
-            <input type = "text" onChange = {event => setCaption(event.target.value)} value={caption}placeholder = "Enter a Caption ..."/><br/>
-            <input onChange = {handleChange} type = "file"/><br/>
-            <Button onClick = {handleUpload}>Upload</Button>
+            <progress className = "imageupload__progress" value ={progress} max = "100"/><br/>
+
+            <TextField id="outlined-basic"  variant="outlined"type = "text" onChange = {event => setCaption(event.target.value)} value={caption}placeholder = "Enter a Caption ..."/><br/>
+                <div className = "upload">
+                        <BackupOutlinedIcon/>&nbsp;
+                        <input onChange = {handleChange} type = "file"/>
+                </div>
+                    <Button color="primary" onClick = {handleUpload}>Upload</Button>
         </div>
     )
 }
